@@ -278,9 +278,13 @@ import { PumpApi } from '@cryptoscan/pumpfun-sdk';
 const api = new PumpApi();
 const coinAddress = 'HJAoYbnsf16Z8ftk3SsuShKLQQgzmxAPu41RTpjjpump';
 
-api.listenTransactions(coinAddress, (transaction) => {
+const stopListening = api.listenTransactions(coinAddress, (transaction) => {
   console.log(transaction)
 })
+
+setTimeout(() => {
+  stopListening();
+}, 60 * 1000)
 ```
 
 ## Listen coin bumps

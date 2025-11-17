@@ -3,3 +3,4 @@ export { SellParams } from './SellParams.js';
 export { PumpCoin } from './PumpCoin.js';
 export { TransferParams } from './TransferParams.js';
 export { PumpApiParams } from './PumpApiParams.js';
+export type { Transaction } from '@cryptoscan/scanner-sdk';

@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import { CreateSwapParams, CreateTransferParams, swap } from "@cryptoscan/swap-sdk";
-import { getRate } from '@cryptoscan/scanner-sdk';
+import { getRate, listenTransactions as listenScannerTransactions } from '@cryptoscan/scanner-sdk';
 import { Connection } from "@solana/web3.js";
 import { TransferParams } from './types/TransferParams.js';
 import { BuyParams } from "./types/BuyParams.js";
@@ -9,6 +9,7 @@ import { SellParams } from "./types/SellParams.js";
 import { PumpCoin } from "./types/index.js";
 import { SwapParams } from '@cryptoscan/swap-sdk';
 import { getBalance } from '@cryptoscan/solana-wallet-sdk';
+import { Transaction } from '@cryptoscan/scanner-sdk';
 
 export class PumpApi {
 	protected readonly params: PumpApiParams = {
@@ -123,9 +124,16 @@ export class PumpApi {
 		return swap(params)
 	}
 
-	public async listenTransactions(address: string, onTransaction: (transaction: Record<string, unknown>) => void) {
-		throw new Error('is not implemented')
-	}
+        public listenTransactions(address: string, onTransaction: (transaction: Transaction) => void): () => void {
+                return listenScannerTransactions(
+                        {
+                                network: 'solana',
+                                service: 'pumpfun',
+                                to: address,
+                        },
+                        onTransaction,
+                );
+        }
 
 	public listenCoinBump(coinAddress: string, onBump: (coin: PumpCoin) => void) {
 		return this.listenPumpFun((type, coin) => {
